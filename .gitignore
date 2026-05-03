@@ -1,5 +1,6 @@
 # CLion / JetBrains
 .idea/
+docker/.env
 
 # CMake build dirs
 build/
