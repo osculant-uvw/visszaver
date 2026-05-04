@@ -6,8 +6,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(
-		visszaver
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PQXX REQUIRED libpqxx)
+
+add_executable(visszaver
 		src/main.cpp
 		src/app.cpp
 )
@@ -15,6 +17,12 @@ add_executable(
 target_include_directories(visszaver
 		PRIVATE
 		${PROJECT_SOURCE_DIR}/include
+		${PQXX_INCLUDE_DIRS}
+)
+
+target_link_libraries(visszaver
+		PRIVATE
+		${PQXX_LIBRARIES}
 )
 
 add_compile_options(
