@@ -10,6 +10,7 @@ add_executable(
 		visszaver
 		src/main.cpp
 		src/app.cpp
+		include/domain/order.hpp
 )
 
 target_include_directories(visszaver
