@@ -1,5 +1,7 @@
 #pragma once
 
 namespace app {
-    void run();
-}
+
+void run();
+
+} // namespace app
