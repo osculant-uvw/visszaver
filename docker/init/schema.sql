@@ -1,38 +1,10 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-CREATE TYPE order_side AS ENUM (
-    'BUY',
-    'SELL'
-);
-
-CREATE TYPE order_status AS ENUM (
-    'OPEN',
-    'FILLED',
-    'REJECTED',
-    'CANCELLED',
-    'EXPIRED'
-);
-
-CREATE TABLE accounts (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name TEXT NOT NULL
-);
-
-CREATE TABLE symbols (
-   symbol TEXT PRIMARY KEY
-);
-
-CREATE TABLE orders (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    account_id UUID NOT NULL REFERENCES accounts(id),
-    symbol TEXT NOT NULL REFERENCES symbols(symbol),
-    side order_side NOT NULL,
-    quantity NUMERIC NOT NULL CHECK (quantity > 0),
-    price NUMERIC NOT NULL CHECK (price > 0),
-    status order_status NOT NULL,
-    submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX idx_orders_account_id_created_at
-    ON orders(account_id, submitted_at DESC);
+CREATE TABLE telemetry_timeseries (
+    satellite_id text NOT NULL,
+    received_at timestamptz NOT NULL DEFAULT now(),
+    latitude_degrees numeric NOT NULL,
+    longitude_degrees numeric NOT NULL,
+    altitude_metres numeric NOT NULL,
+    speed_metres_per_second numeric NOT NULL,
+    temperature_kelvin numeric NOT NULL,
+    PRIMARY KEY (satellite_id, received_at)
+)
