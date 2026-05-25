@@ -10,13 +10,13 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(PQXX REQUIRED libpqxx)
 
 add_executable(visszaver
-		src/main.cpp
-		src/app.cpp
+		app/main.cpp
+		app/app.cpp
 )
 
 target_include_directories(visszaver
 		PRIVATE
-		${PROJECT_SOURCE_DIR}/include
+		${PROJECT_SOURCE_DIR}
 		${PQXX_INCLUDE_DIRS}
 )
 
