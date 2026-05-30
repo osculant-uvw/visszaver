@@ -9,24 +9,41 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PQXX REQUIRED libpqxx)
 
-add_executable(visszaver
-		app/main.cpp
-		app/app.cpp
+add_compile_options(
+		-Wall
+		-Wextra
+		-Wpedantic
 )
 
-target_include_directories(visszaver
+# app/visszaver-api
+add_executable(visszaver_api
+		app/visszaver-api/main.cpp
+)
+
+target_include_directories(visszaver_api
 		PRIVATE
 		${PROJECT_SOURCE_DIR}
 		${PQXX_INCLUDE_DIRS}
 )
 
-target_link_libraries(visszaver
+target_link_libraries(visszaver_api
 		PRIVATE
 		${PQXX_LIBRARIES}
 )
 
-add_compile_options(
-		-Wall
-		-Wextra
-		-Wpedantic
+
+# app/visszaver-satellite-receiver
+add_executable(visszaver_satellite_receiver
+		app/visszaver-satellite-receiver/main.cpp
+)
+
+target_include_directories(visszaver_satellite_receiver
+		PRIVATE
+		${PROJECT_SOURCE_DIR}
+		${PQXX_INCLUDE_DIRS}
+)
+
+target_link_libraries(visszaver_satellite_receiver
+		PRIVATE
+		${PQXX_LIBRARIES}
 )
