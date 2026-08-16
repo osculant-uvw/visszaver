@@ -7,7 +7,7 @@
 namespace app {
 
 const uint LISTENER_PORT = 7777;
-const uint BUFFER_SIZE_BYTES = 4096
+const uint BUFFER_SIZE_BYTES = 4096;
 
 void run() {
     try {
