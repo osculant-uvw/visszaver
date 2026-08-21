@@ -1,11 +1,10 @@
-#include <chrono>
 #include <iostream>
-#include <iomanip>
 #include <string>
 #include <vector>
 
 #include <pqxx/pqxx>
 
+#include "app/common/time_helpers.cpp"
 #include "domain/telemetry.hpp"
 
 
@@ -13,21 +12,6 @@ namespace app {
 
 const char* DB_HOST = "localhost";
 const char* DB_PORT = "5432";
-
-
-const auto STRING_TO_TIMEPOINT = [](const std::string& timestamp) {
-    std::istringstream stream(timestamp);
-    std::tm tm{};
-    stream >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
-    return std::chrono::system_clock::from_time_t(std::mktime(&tm));
-};
-
-const auto TIMEPOINT_TO_STRING = [](const std::chrono::system_clock::time_point timestamp) {
-    std::time_t time = std::chrono::system_clock::to_time_t(timestamp);
-    std::ostringstream stream{};
-    stream << std::put_time(std::gmtime(&time), "%Y-%m-%d %H:%M:%S");
-    return stream.str();
-};
 
 
 void run() {
@@ -84,7 +68,7 @@ void run() {
         for (const auto& row : result) {
             top10.emplace_back(
                     row[0].as<std::string>(),
-                    STRING_TO_TIMEPOINT(row[1].as<std::string>()),
+                    common::STRING_TO_TIMEPOINT(row[1].as<std::string>()),
                     row[2].as<double>(),
                     row[3].as<double>(),
                     row[4].as<double>(),
@@ -102,7 +86,7 @@ void run() {
     std::cout << "last 10 rows from telemetry_timeseries in descending order \n";
     for (const auto& item: top10) {
         std::cout << item.satelliteId << " "
-                  << TIMEPOINT_TO_STRING(item.timeReceived) << " "
+                  << common::TIMEPOINT_TO_STRING(item.timeReceived) << " "
                   << item.latitude << " "
                   << item.longitude << " "
                   << item.altitude << " "

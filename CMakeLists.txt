@@ -18,6 +18,7 @@ add_compile_options(
 # app/visszaver-api
 add_executable(visszaver_api
 		app/visszaver-api/main.cpp
+		app/common/time_helpers.cpp
 )
 
 target_include_directories(visszaver_api
@@ -35,6 +36,7 @@ target_link_libraries(visszaver_api
 # app/visszaver-satellite-receiver
 add_executable(visszaver_satellite_receiver
 		app/visszaver-satellite-receiver/main.cpp
+		app/common/time_helpers.cpp
 )
 
 target_include_directories(visszaver_satellite_receiver
