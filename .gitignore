@@ -6,3 +6,6 @@ docker/.env
 # CMake build dirs
 build/
 cmake-build-*/
+
+# research environment local
+research/output/
