@@ -18,7 +18,6 @@ add_compile_options(
 # app/visszaver-api
 add_executable(visszaver_api
 		app/visszaver-api/main.cpp
-		app/common/time_helpers.cpp
 )
 
 target_include_directories(visszaver_api
@@ -36,7 +35,6 @@ target_link_libraries(visszaver_api
 # app/visszaver-satellite-receiver
 add_executable(visszaver_satellite_receiver
 		app/visszaver-satellite-receiver/main.cpp
-		app/common/time_helpers.cpp
 )
 
 target_include_directories(visszaver_satellite_receiver
@@ -53,8 +51,6 @@ target_link_libraries(visszaver_satellite_receiver
 # app/visszaver-satellite-simulator
 add_executable(visszaver_satellite_simulator
 		app/visszaver-satellite-simulator/main.cpp
-		app/visszaver-satellite-simulator/model_satellite.cpp
-		app/common/time_helpers.cpp
 )
 
 target_include_directories(visszaver_satellite_simulator

@@ -5,8 +5,8 @@
 
 #include <asio.hpp>
 
-#include "app/common/time_helpers.cpp"
-#include "model_satellite.cpp"
+#include "app/common/time_helpers.hpp"
+#include "model_satellite.hpp"
 
 namespace app {
 

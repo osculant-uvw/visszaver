@@ -4,7 +4,7 @@
 
 #include <pqxx/pqxx>
 
-#include "app/common/time_helpers.cpp"
+#include "app/common/time_helpers.hpp"
 #include "domain/telemetry.hpp"
 
 
