@@ -25,10 +25,9 @@ void run() {
 
             std::cout << bytesReceived << " bytes from "
                       << remoteEndpoint.address().to_string()
-                      << ":" << remoteEndpoint.port() << "\n";
+                      << ":" << remoteEndpoint.port() << " -- ";
 
             std::cout.write(recvBuf.data(), bytesReceived);
-            std::cout << "\n";
 
         }
     }
