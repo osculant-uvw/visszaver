@@ -33,13 +33,16 @@ void run(ModelSatellite& satellite) {
 
         asio::ip::udp::endpoint server(asio::ip::make_address(LOCALHOST), SERVER_PORT);
 
+        auto simulationTime = std::chrono::system_clock::now();
         uint64_t count = 0;
         while (true) {
             if (count % 60 == 0) {
-                std::string message = satelliteMessage(satellite, std::chrono::system_clock::now());
+                std::string message = satelliteMessage(satellite, simulationTime);
                 socket.send_to(asio::buffer(message), server);
             }
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            simulationTime += std::chrono::seconds(1);
             satellite.updateFrame(1);
             ++count;
         }
