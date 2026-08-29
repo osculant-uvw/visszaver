@@ -5,7 +5,7 @@
 #include <pqxx/pqxx>
 
 #include "app/common/time_helpers.hpp"
-#include "domain/satellite_telemetry.hpp"
+#include "satellite_telemetry.hpp"
 
 
 namespace app {
