@@ -47,3 +47,19 @@ target_link_libraries(visszaver_satellite_receiver
 		PRIVATE
 		${PQXX_LIBRARIES}
 )
+
+# app/visszaver-satellite-simulator
+add_executable(visszaver_satellite_simulator
+		app/visszaver-satellite-simulator/main.cpp
+)
+
+target_include_directories(visszaver_satellite_simulator
+		PRIVATE
+		${PROJECT_SOURCE_DIR}
+		${PQXX_INCLUDE_DIRS}
+)
+
+target_link_libraries(visszaver_satellite_simulator
+		PRIVATE
+		${PQXX_LIBRARIES}
+)

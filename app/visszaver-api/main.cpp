@@ -1,33 +1,17 @@
-#include <chrono>
 #include <iostream>
-#include <iomanip>
 #include <string>
 #include <vector>
 
 #include <pqxx/pqxx>
 
-#include "domain/telemetry.hpp"
+#include "app/common/time_helpers.hpp"
+#include "satellite_telemetry.hpp"
 
 
 namespace app {
 
 const char* DB_HOST = "localhost";
 const char* DB_PORT = "5432";
-
-
-const auto STRING_TO_TIMEPOINT = [](const std::string& timestamp) {
-    std::istringstream stream(timestamp);
-    std::tm tm{};
-    stream >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
-    return std::chrono::system_clock::from_time_t(std::mktime(&tm));
-};
-
-const auto TIMEPOINT_TO_STRING = [](const std::chrono::system_clock::time_point timestamp) {
-    std::time_t time = std::chrono::system_clock::to_time_t(timestamp);
-    std::ostringstream stream{};
-    stream << std::put_time(std::gmtime(&time), "%Y-%m-%d %H:%M:%S");
-    return stream.str();
-};
 
 
 void run() {
@@ -66,15 +50,13 @@ void run() {
 
         std::string QUERY = R"(
             SELECT
-                satellite_id,
-                received_at,
-                latitude_degrees,
-                longitude_degrees,
-                altitude_metres,
-                speed_metres_per_second,
-                temperature_kelvin
-            FROM telemetry_timeseries
-            ORDER BY (received_at)
+                timestamp,
+                name,
+                pos_x, pos_y, pos_z,
+                vel_x, vel_y, vel_z,
+                acc_x, acc_y, acc_z
+            FROM satellite_telemetry_timeseries
+            ORDER BY (timestamp)
             DESC LIMIT 10;
         )";
         pqxx::work txn(conn);
@@ -82,15 +64,13 @@ void run() {
         txn.commit();
 
         for (const auto& row : result) {
-            top10.emplace_back(
-                    row[0].as<std::string>(),
-                    STRING_TO_TIMEPOINT(row[1].as<std::string>()),
-                    row[2].as<double>(),
-                    row[3].as<double>(),
-                    row[4].as<double>(),
-                    row[5].as<double>(),
-                    row[6].as<double>()
-            );
+            top10.push_back({
+                common::STRING_TO_TIMEPOINT(row[0].as<std::string>()),
+                row[1].as<std::string>(),
+                {row[2].as<double>(), row[3].as<double>(), row[4].as<double>()},
+                {row[5].as<double>(), row[6].as<double>(), row[7].as<double>()},
+                {row[8].as<double>(), row[9].as<double>(), row[10].as<double>()}
+            });
         }
 
         conn.disconnect();
@@ -99,15 +79,18 @@ void run() {
         std::cerr << "Failed to query database: " << e.what() << "\n";
     }
 
-    std::cout << "last 10 rows from telemetry_timeseries in descending order \n";
-    for (const auto& item: top10) {
-        std::cout << item.satelliteId << " "
-                  << TIMEPOINT_TO_STRING(item.timeReceived) << " "
-                  << item.latitude << " "
-                  << item.longitude << " "
-                  << item.altitude << " "
-                  << item.speed << " "
-                  << item.temperature << "\n";
+    std::cout << "last 10 rows from satellite_telemetry_timeseries in descending order \n";
+    for (const auto& satellite: top10) {
+
+        std::ostringstream message{};
+        message << common::TIMEPOINT_TO_STRING(satellite.timestamp) << ","
+                << satellite.name << ","
+                << satellite.position[0] << "," << satellite.position[1] << "," << satellite.position[2] << ","
+                << satellite.velocity[0] << "," << satellite.velocity[1] << "," << satellite.velocity[2] << ","
+                << satellite.acceleration[0] << "," << satellite.acceleration[1] << "," << satellite.acceleration[2]
+                << "\n";
+
+        std::cout << message.str();
     }
 
 }
